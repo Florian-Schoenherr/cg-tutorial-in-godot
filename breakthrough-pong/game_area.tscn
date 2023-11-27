@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://btcpxtchwjjqh"]
+
+[ext_resource type="PackedScene" uid="uid://cb8e375ov6ogg" path="res://player.tscn" id="1_ncu61"]
+[ext_resource type="Script" path="res://GameArea.cs" id="1_uexiu"]
+[ext_resource type="PackedScene" uid="uid://c1gcn7vsohtgo" path="res://ball.tscn" id="3_2utlj"]
+[ext_resource type="PackedScene" uid="uid://rbkhkqy8s6mu" path="res://newgrounds.tscn" id="3_e7jvg"]
+[ext_resource type="PackedScene" uid="uid://b7uwdnekr8axq" path="res://out.tscn" id="5_cwe2l"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_s16iu"]
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+sky_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+ground_bottom_color = Color(0.384314, 0.454902, 0.54902, 1)
+ground_horizon_color = Color(0.647059, 0.654902, 0.670588, 1)
+
+[sub_resource type="Sky" id="Sky_qq2f6"]
+sky_material = SubResource("ProceduralSkyMaterial_s16iu")
+
+[sub_resource type="Environment" id="Environment_6hguh"]
+background_mode = 2
+sky = SubResource("Sky_qq2f6")
+ambient_light_source = 2
+ambient_light_color = Color(0.470588, 0.470588, 0.470588, 1)
+ambient_light_energy = 2.0
+tonemap_mode = 3
+glow_enabled = true
+glow_bloom = 0.5
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_81nbw"]
+
+[node name="GameArea" type="Node3D"]
+script = ExtResource("1_uexiu")
+
+[node name="Player" parent="." instance=ExtResource("1_ncu61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 10, 0)
+
+[node name="Player2" parent="." instance=ExtResource("1_ncu61")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 10, 0)
+player2 = true
+
+[node name="Ball" parent="." instance=ExtResource("3_2utlj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 10, 0)
+
+[node name="Ball2" parent="." instance=ExtResource("3_2utlj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 10, 0)
+direction_x = 1.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 19)
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6hguh")
+camera_attributes = SubResource("CameraAttributesPractical_81nbw")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_energy = 2.0
+omni_range = 100.0
+omni_attenuation = 0.482968
+
+[node name="bottom" parent="." instance=ExtResource("3_e7jvg")]
+
+[node name="top" parent="." instance=ExtResource("3_e7jvg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="out_left" parent="." instance=ExtResource("5_cwe2l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 9.331, 0)
+
+[node name="out_right" parent="." instance=ExtResource("5_cwe2l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 9.331, 0)
+
+[connection signal="body_entered" from="out_left" to="Ball" method="_on_out_left_body_entered"]
+[connection signal="body_entered" from="out_right" to="Ball2" method="_on_out_right_body_entered"]

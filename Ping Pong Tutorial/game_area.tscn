@@ -1,0 +1,67 @@
+[gd_scene load_steps=10 format=3 uid="uid://ykwvn2xlk6of"]
+
+[ext_resource type="PackedScene" uid="uid://c4drrwx81f3tr" path="res://wall.tscn" id="1_j2liu"]
+[ext_resource type="PackedScene" uid="uid://djcha8vtbknsn" path="res://player.tscn" id="2_hyt1w"]
+[ext_resource type="Script" path="res://Ball.cs" id="3_pp803"]
+[ext_resource type="PackedScene" uid="uid://c0m62cfr4c5nu" path="res://out.tscn" id="4_ru3nl"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_flhmo"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_x82wk"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bidp0"]
+sky_top_color = Color(0.384314, 0.454902, 1, 1)
+sky_horizon_color = Color(0.670588, 0.670588, 0.670588, 1)
+ground_bottom_color = Color(0.388235, 0.462745, 0.74902, 1)
+
+[sub_resource type="Sky" id="Sky_qiiv8"]
+sky_material = SubResource("ProceduralSkyMaterial_bidp0")
+
+[sub_resource type="Environment" id="Environment_2r16e"]
+background_mode = 2
+sky = SubResource("Sky_qiiv8")
+ambient_light_source = 2
+ambient_light_color = Color(0.541176, 0.537255, 0.415686, 1)
+
+[node name="GameArea" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 19)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_energy = 2.0
+omni_range = 100.254
+omni_attenuation = 0.482968
+
+[node name="Top" parent="." instance=ExtResource("1_j2liu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+
+[node name="Bottom" parent="." instance=ExtResource("1_j2liu")]
+
+[node name="Player1" parent="." instance=ExtResource("2_hyt1w")]
+
+[node name="Player2" parent="." instance=ExtResource("2_hyt1w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 10, 0)
+player2 = true
+
+[node name="Ball" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+script = ExtResource("3_pp803")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball"]
+shape = SubResource("SphereShape3D_flhmo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball"]
+mesh = SubResource("SphereMesh_x82wk")
+
+[node name="OutLeft" parent="." instance=ExtResource("4_ru3nl")]
+
+[node name="OutRight" parent="." instance=ExtResource("4_ru3nl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 10, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2r16e")
+
+[connection signal="body_entered" from="OutLeft" to="Ball" method="_on_out_left_body_entered"]
+[connection signal="body_entered" from="OutRight" to="Ball" method="_on_out_right_body_entered"]
